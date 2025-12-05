@@ -12,22 +12,23 @@ connectDB();
 
 // Middleware
 app.use(helmet());
+app.use(express.json({ limit: "10kb" }));
 
-// CORS configuration for React frontend on 5174
+// CORS configuration for Vercel & localhost
 app.use(cors({
-  origin: "http://localhost:5174", // React app URL
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://contact-manager-three-phi.vercel.app"   // your frontend
+  ],
   credentials: true
 }));
 
-// Body parser
-app.use(express.json({ limit: "10kb" }));
-
 // Rate limiter
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 120 // limit each IP to 120 requests per windowMs
-});
-app.use(limiter);
+app.use(rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 120
+}));
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
@@ -35,9 +36,11 @@ app.use("/api/contacts", require("./routes/contacts"));
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.json({ message: "Backend is running on Vercel!" });
 });
 
-// Start server
+// Start server for Vercel
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on Port ${PORT}`));
+
+module.exports = app;
