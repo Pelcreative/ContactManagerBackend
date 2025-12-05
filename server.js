@@ -19,7 +19,8 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://contact-manager-three-phi.vercel.app"   // your frontend
+    "https://contact-manager-three-phi.vercel.app",  // your frontend
+    "https://contact-manager-y9tn.vercel.app"
   ],
   credentials: true
 }));
