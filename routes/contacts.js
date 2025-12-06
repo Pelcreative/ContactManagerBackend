@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const Contact = require("../models/Contact");
 
-// GET /api/contacts  -> list contacts for auth user
+
 router.get("/", auth, async (req, res) => {
   try {
     const contacts = await Contact.find({ user: req.user.id }).sort({ createdAt: -1 });
@@ -13,7 +13,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// POST /api/contacts -> create
+
 router.post("/", auth, async (req, res) => {
   try {
     const { name, phone, email, notes } = req.body;
@@ -27,7 +27,7 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-// PUT /api/contacts/:id -> update
+
 router.put("/:id", auth, async (req, res) => {
   try {
     const contact = await Contact.findOne({ _id: req.params.id, user: req.user.id });
@@ -43,7 +43,7 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-// DELETE /api/contacts/:id -> delete
+
 router.delete("/:id", auth, async (req, res) => {
   try {
     const contact = await Contact.findOneAndDelete({ _id: req.params.id, user: req.user.id });
