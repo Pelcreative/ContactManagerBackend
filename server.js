@@ -7,7 +7,6 @@ const rateLimit = require("express-rate-limit");
 
 const app = express();
 
-
 connectDB();
 
 
@@ -15,9 +14,7 @@ app.use(helmet());
 app.use(express.json({ limit: "10kb" }));
 
 
-const FRONTEND_URL = process.env.FRONTEND_URL; 
 const LOCAL_ORIGINS = ["http://localhost:5173", "http://localhost:5174"];
-
 
 app.use(
   cors({
@@ -26,12 +23,7 @@ app.use(
 
       if (LOCAL_ORIGINS.includes(origin)) return callback(null, true);
 
-      if (origin === FRONTEND_URL) return callback(null, true);
-
-      return callback(
-        new Error(`CORS blocked: ${origin} is not allowed by the server`),
-        false
-      );
+      return callback(new Error(`CORS blocked: ${origin}`), false);
     },
     credentials: true,
   })
@@ -40,7 +32,7 @@ app.use(
 
 app.use(
   rateLimit({
-    windowMs: 1 * 60 * 1000,
+    windowMs: 60 * 1000,
     max: 120,
   })
 );
@@ -51,11 +43,10 @@ app.use("/api/contacts", require("./routes/contacts"));
 
 
 app.get("/", (req, res) => {
-  res.json({ message: "Backend is running on Render!" });
+  res.json({ message: "Backend running locally!" });
 });
 
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on Port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
 module.exports = app;
